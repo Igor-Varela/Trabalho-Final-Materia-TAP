@@ -1,0 +1,88 @@
+﻿@page "/clientedelete/{id:int}"
+@using Model
+@using Interfaces
+@inject IClienteService ClienteService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+
+<p style="color:red;text-align:center">Realmente deseja excluir este cliente permanentemente? </p>
+
+<EditForm Model="@cliente">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <table class="d-lg-table-cell table-hover table table-responsive table table-hover  table-striped ">
+                <tr class="table-secondary">
+                    <td>Nome:</td>
+                    <td><h6>@cliente.NomeC</h6></td>
+                </tr>
+                <tr class="table-secondary">
+                    <td>Empresa:</td>
+                    <td><h6>@cliente.EmpresaC</h6></td>
+                </tr>
+                <tr class="table-secondary">
+                    <td>Endereço:</td>
+                    <td><h6>@cliente.EnderecoC</h6></td>
+                </tr>
+                <tr class="table-secondary">
+                    <td>Cidade:</td>
+                    <td><h6>cliente.CidadeC</h6></td>
+                </tr>
+                <tr class="table-secondary">
+                    <td>Email:</td>
+                    <td><h6>@cliente.EmailC</h6></td>
+                </tr>
+                <tr class="table-secondary">
+                    <td>CPF:</td>
+                    <td><h6>@cliente.CpfC</h6></td>
+                </tr>
+                <tr class="table-secondary">
+                    <td>Telefone:</td>
+                    <td><h6>cliente.TelefoneC</h6></td>
+                </tr>
+                <tr class="table-secondary">
+                    <td>Estado:</td>
+                    <td><h6>@cliente.EstadoC</h6></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:center">
+                        <input type="submit" class="btn btn-danger" value="Excluir" @onclick="DeleteCliente" />
+                        <input type="button" class="btn btn-primary" value="Cancelar" @onclick="CancelCliente" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</EditForm>
+@code {
+
+    Cliente cliente = new Cliente();
+
+    [Parameter]
+    public int id { get; set; }
+
+
+
+    protected async Task DeleteCliente()
+    {
+        string Confirmacao = "Você tem certeza que deseja apagar este registro ?";
+        if (await JS.InvokeAsync<bool>("confirm", Confirmacao))
+        {
+            await ClienteService.DeleteCliente(id);
+            NavigationManager.NavigateTo("/clientelist");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        cliente = await ClienteService.GetDetails(id);
+    }
+
+    protected void CancelCliente()
+    {
+        NavigationManager.NavigateTo("/clientelist");
+    }
+
+}

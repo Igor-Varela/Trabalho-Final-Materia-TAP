@@ -1,0 +1,75 @@
+﻿@page "/funcionariolist"
+@using Model
+@using Interfaces
+@inject IFuncionarioService FuncionarioService 
+
+
+<h2>Lista de funcionários</h2>
+<br><br/>
+<a href="/funcionariodetails"><i class="btn btn-primary"> Adicionar novo funcionário</i></a>
+<br><br/>
+
+@if (funcionarios == null)
+    {
+                <p><em>Loading...</em></p>
+    }
+   else 
+{
+       <table  class="table table-hover table-dark table-striped">
+           <thead>
+               <tr>
+                   <th>Nome</th>
+                   <th>CPF</th>
+                   <th>Endereço</th>
+                   <th>Telefone</th>
+                   <th>Cidade</th>
+                   <th>Estado</th>
+                   <th>Cargo</th>
+                   <th>Área</th>
+                   <th>E-mail</th>
+                   <th></th>
+                   <th></th>
+               </tr>
+           </thead>
+           <tbody>
+               @foreach (var funcionario in funcionarios) 
+               { 
+                    <tr>
+                        <td>@funcionario.Nome</td>
+                        <td>@funcionario.Cpf</td>
+                        <td>@funcionario.Endereco</td>
+                        <td>@funcionario.Telefone</td>
+                        <td>@funcionario.Cidade</td>
+                        <td>@funcionario.Estado</td>
+                        <td>@funcionario.Cargo</td>
+                        <td>@funcionario.Area</td>
+                        <td>@funcionario.Email</td>
+                        <td><a href="/dadosfuncionario/@funcionario.Id"><i class="btn btn-secondary" > Dados</i></a> </td>
+                        <td><a href="/funcionariodetails/@funcionario.Id"><i class="btn btn-secondary"> Editar</i></a> </td>
+                        <td><a href="/funcionariodelete/@funcionario.Id">  <i class="btn btn-danger">Excluir</i></a></td>
+
+                    </tr>
+               }
+           </tbody>
+       </table> 
+}
+
+
+
+@code {
+
+
+    private IEnumerable<Funcionario> funcionarios;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            funcionarios = await FuncionarioService.GetAllFuncionarios();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+}

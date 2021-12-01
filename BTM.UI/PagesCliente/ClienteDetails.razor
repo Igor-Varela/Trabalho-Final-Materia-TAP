@@ -1,0 +1,127 @@
+﻿@page "/clientedetails"
+@page "/clientedetails/{id:int}"
+@using Model
+@using Interfaces
+@inject IClienteService ClienteService
+@inject NavigationManager NavigationManager
+
+
+
+
+<EditForm Model="@cliente">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <h3>Novo cliente</h3>
+
+            <table class="d-lg-table-cell table-hover table table-responsive ">
+                <tr>
+                    <td>Nome:</td>
+                    <td><input class="alert-dark" type="text" @bind="cliente.NomeC" placeholder="Nome Completo" /></td>
+                </tr>
+                <tr>
+                    <td>Empresa:</td>
+                    <td><input class="alert-dark" type="text" @bind="cliente.EmpresaC" placeholder="Nome da Empresa" /></td>
+                </tr>
+                <tr>
+                    <td>Endereço:</td>
+                    <td><input class="alert-dark" type="text" @bind="cliente.EnderecoC" placeholder="Endereço" /></td>
+                </tr>
+                <tr>
+                    <td>Cidade:</td>
+                    <td><input class="alert-dark" type="text" @bind="cliente.CidadeC" placeholder="Cidade" /></td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td><input class="alert-dark" type="text" @bind="cliente.EmailC" placeholder="E-Mail" /></td>
+                </tr>
+                <tr>
+                    <td>CPF:</td>
+                    <td><input class="alert-dark" type="text" @bind="cliente.CpfC" placeholder="XXX.XXX.XXX-XX" /></td>
+                </tr>
+                <tr>
+                    <td>Telefone:</td>
+                    <td><input class="alert-dark" type="text" @bind="cliente.TelefoneC" placeholder="(XX)XXXXX-XXXX" /></td>
+                </tr>
+                <tr>
+                    <td>Estado:</td>
+                    <td>
+                        <select class="form-select alert-dark" aria-label="Default select example" @bind="cliente.EstadoC">
+                            <option selected>Estados</option>
+                            <option value="AC">AC</option>
+                            <option value="AL">AL</option>
+                            <option value="AP">AP</option>
+                            <option value="AM">AM</option>
+                            <option value="BA">BA</option>
+                            <option value="CE">CE</option>
+                            <option value="DF">DF</option>
+                            <option value="ES">ES</option>
+                            <option value="GO">GO</option>
+                            <option value="MA">MA</option>
+                            <option value="MT">MT</option>
+                            <option value="MS">MS</option>
+                            <option value="MG">MG</option>
+                            <option value="PA">PA</option>
+                            <option value="PB">PB</option>
+                            <option value="PR">PR</option>
+                            <option value="PE">PE</option>
+                            <option value="PI">PI</option>
+                            <option value="RJ">RJ</option>
+                            <option value="RN">RN</option>
+                            <option value="RS">RS</option>
+                            <option value="RO">RO</option>
+                            <option value="RR">RR</option>
+                            <option value="SC">SC</option>
+                            <option value="SP">SP</option>
+                            <option value="SE">SE</option>
+                            <option value="TO">TO</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:center">
+                        <input type="submit" class="btn btn-primary" value="Salvar" @onclick="SaveCliente" />
+                        <input type="button" class="btn btn-primary" value="Cancelar" @onclick="CancelCliente" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+            
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+
+    Cliente cliente = new Cliente();
+
+    protected void CancelCliente()
+    {
+        NavigationManager.NavigateTo("/clientelist");
+    }
+    protected async Task SaveCliente()
+    {
+
+        await ClienteService.SaveCliente(cliente);
+
+        NavigationManager.NavigateTo("/clientelist");
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (id == 0)
+        {
+
+        }
+        else
+        {
+            cliente = await ClienteService.GetDetails(id);
+
+
+        }
+    }
+
+}

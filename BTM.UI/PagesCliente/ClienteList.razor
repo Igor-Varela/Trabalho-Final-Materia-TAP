@@ -1,0 +1,89 @@
+﻿@page "/clientelist"
+@using Model
+@using Interfaces
+@inject IClienteService ClienteService
+
+
+<h2>Lista de clientes</h2>
+<br><br/>
+<a href="/clientedetails"><i class="btn btn-primary"> Adicionar novo cliente</i></a>
+<br>
+<br />
+
+@if (clientes == null)
+{
+    <p><em>Carregando....</em></p>
+
+}
+else
+{
+    <table class="table table-hover table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Nome:</th>
+                <th>Empresa:</th>
+                <th>Endereço:</th>
+                <th>Cidade:</th>
+                <th>Estado:</th>
+                <th>Email:</th>
+                <th>CPF:</th>
+                <th>Telefone:</th>
+                <th></th>
+                <th></th>
+                <th></th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cliente in clientes)
+            {
+                <tr>
+                    <td>@cliente.NomeC</td>
+                    <td>@cliente.EmpresaC</td>
+                    <td>@cliente.EnderecoC</td>
+                    <td>@cliente.CidadeC</td>
+                    <td>@cliente.EstadoC</td>
+                    <td>@cliente.EmailC</td>
+                    <td>@cliente.CpfC</td>
+                    <td>@cliente.TelefoneC</td>
+                    <td><a href="/dadoscliente/@cliente.Id_Cliente"><i class="btn btn-secondary">Dados</i></a></td>
+                    <td><a href="/clientedetails/@cliente.Id_Cliente"><i class="btn btn-secondary"> Editar</i></a> </td>
+                    <td><a href="/clientedelete/@cliente.Id_Cliente"><i class="btn btn-danger">Excluir</i></a></td>
+
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+
+}
+
+
+
+
+
+@code {
+
+    private IEnumerable<Cliente> clientes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            clientes = await ClienteService.GetAllClientes();
+
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+
+
+}

@@ -1,0 +1,99 @@
+﻿@page "/funcionariodelete/{id:int}"
+@using Model
+@using Interfaces
+@inject IFuncionarioService FuncionarioService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+
+
+
+<p style="color:red;text-align:center">Realmente deseja excluir este funcionário permanentemente? </p>
+
+<EditForm Model="@funcionario">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <table class="d-lg-table-cell table-hover table table-responsive table table-hover  table-striped ">
+                <tr class="table-secondary">
+                    <td>Nome:</td>
+                    <td><h6>@funcionario.Nome</h6></td>
+                </tr>
+                <tr class="table-secondary">
+                    <td>Endereço:</td>
+                    <td><h6>@funcionario.Endereco</h6></td>
+                </tr>
+
+                <tr class="table-secondary">
+                    <td>Cidade:</td>
+                    <td><h6>@funcionario.Cidade</h6></td>
+                </tr>
+
+                <tr class="table-secondary">
+                    <td>Estado:</td>
+                    <td><h6>@funcionario.Estado</h6></td>
+                </tr>
+
+                <tr class="table-secondary">
+                    <td>CPF:</td>
+                    <td><h6>@funcionario.Cpf</h6></td>
+                </tr>
+
+                <tr class="table-secondary">
+                    <td>Telefone:</td>
+                    <td><h6>@funcionario.Telefone</h6></td>
+                </tr>
+
+                <tr class="table-secondary">
+                    <td>E-Mail:</td>
+                    <td><h6>@funcionario.Email</h6></td>
+                </tr>
+
+                <tr class="table-secondary">
+                    <td>Cargo:</td>
+                    <td><h6>@funcionario.Cargo</h6></td>
+                </tr>
+                <tr class="table-secondary">
+                    <td>Área:</td>
+                    <td><h6>@funcionario.Area</h6></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="text-align:center">
+                        <input type="submit" class="btn btn-danger" value="Excluir" @onclick="DeleteFuncionario" />
+                        <input type="button" class="btn btn-primary" value="Cancelar" @onclick="Cancel" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</EditForm>
+
+
+@code {
+        Funcionario funcionario = new Funcionario();
+
+        [Parameter]
+        public int id { get; set; }
+
+        protected async Task DeleteFuncionario()
+        {
+            string Confirmacao = "Você tem certeza que deseja apagar este registro ?";
+            if (await JS.InvokeAsync<bool>("confirm", Confirmacao))
+            {
+                await FuncionarioService.DeleteFuncionario(id);
+                NavigationManager.NavigateTo("/funcionariolist");
+            }
+        }
+
+    protected override async Task OnInitializedAsync()
+    {
+        funcionario = await FuncionarioService.GetDetails(id);
+    }
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("/funcionariolist");
+    }
+
+}
